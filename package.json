@@ -9,12 +9,32 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.2.1"
+    "@auth/prisma-adapter": "^2.7.4",
+    "@prisma/client": "^5.22.0",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@react-pdf/renderer": "^4.3.0",
+    "@uploadthing/react": "^7.3.0",
+    "aws-sdk": "^2.1692.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "langchain": "^0.0.153",
+    "lucide-react": "^0.477.0",
+    "next": "15.2.1",
+    "next-auth": "^4.24.11",
+    "pdf-parse": "^1.1.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-dropzone": "^14.3.8",
+    "react-pdf": "^7.3.3",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^7.5.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "prisma": "^5.22.0",
     "tailwindcss": "^4"
   }
 }
