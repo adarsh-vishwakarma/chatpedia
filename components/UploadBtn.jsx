@@ -1,60 +1,60 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // ✅ Import useRouter for redirection
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import Dropzone from "react-dropzone";
 import { Cloud, File, Loader2 } from "lucide-react";
 import { Progress } from "./ui/progress";
-import { uploadToS3 } from "@/lib/s3";
 import { useUploadThing } from "@/lib/uploadthing";
 
-
-const UploadDropzone = () => {
+const UploadDropzone = ({ setIsOpen }) => { // ✅ Receive setIsOpen as a prop
   const [fileName, setFileName] = useState(null);
-const [isUploading, setIsUploading] = useState(true)
-const [uploadProgress, setUploadProgress] =
-    useState(0)
+  const [isUploading, setIsUploading] = useState(true);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const router = useRouter(); // ✅ Use router for redirection
 
+  const { startUpload } = useUploadThing("pdfUpload");
 
-const {startUpload} = useUploadThing("pdfUpload")
-    const startSimulatedProgress = () => {
-      setUploadProgress(0)
-  
-      const interval = setInterval(() => {
-        setUploadProgress((prevProgress) => {
-          if (prevProgress >= 95) {
-            clearInterval(interval)
-            return prevProgress
-          }
-          return prevProgress + 5
-        })
-      }, 500)
-  
-      return interval
-    }
+  const startSimulatedProgress = () => {
+    setUploadProgress(0);
+    const interval = setInterval(() => {
+      setUploadProgress((prevProgress) => {
+        if (prevProgress >= 95) {
+          clearInterval(interval);
+          return prevProgress;
+        }
+        return prevProgress + 5;
+      });
+    }, 500);
+    return interval;
+  };
+
   return (
     <Dropzone
       multiple={false}
-      accept=".pdf" // Restrict to only PDF files
-      onDrop={async(acceptedFiles) => {
-        console.log(acceptedFiles)
+      accept=".pdf"
+      onDrop={async (acceptedFiles) => {
+        console.log(acceptedFiles);
         setIsUploading(true);
 
-        
-
         const progressInterval = startSimulatedProgress();
-        const res = await startUpload(acceptedFiles)
-        const [fileResponse] = res
-
-
+        const res = await startUpload(acceptedFiles);
+        const [fileResponse] = res;
+        console.log(fileResponse)
         clearInterval(progressInterval);
-        setUploadProgress(100)    
-        const file = acceptedFiles[0]
-        const data = await uploadToS3(file)
-        console.log(data)
+        setUploadProgress(100);
+
         if (acceptedFiles.length > 0) {
-          setFileName(acceptedFiles[0].name); // Display the name of the uploaded PDF file
+          setFileName(acceptedFiles[0].name);
+        }
+
+        if (fileResponse) {
+          setTimeout(() => {
+            setIsOpen(false); // ✅ Close the dialog after upload
+            // router.push(`/dashboard/${fileResponse.key}`); // ✅ Redirect to uploaded file page
+          }, 1500);
         }
       }}
     >
@@ -77,40 +77,30 @@ const {startUpload} = useUploadThing("pdfUpload")
                 <p className="text-xs text-zinc-500">PDF (up to 4MB)</p>
               </div>
 
-              
               {acceptedFiles && acceptedFiles[0] ? (
-                <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
-                  <div className='px-3 py-2 h-full grid place-items-center'>
-                    <File className='h-4 w-4 text-blue-500' />
+                <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
+                  <div className="px-3 py-2 h-full grid place-items-center">
+                    <File className="h-4 w-4 text-blue-500" />
                   </div>
-                  <div className='px-3 py-2 h-full text-sm truncate'>
+                  <div className="px-3 py-2 h-full text-sm truncate">
                     {acceptedFiles[0].name}
                   </div>
                 </div>
               ) : null}
 
-
               {isUploading ? (
-                <div className='w-full mt-4 max-w-xs mx-auto'>
-                  <Progress
-                    
-                    value={uploadProgress}
-                    className='h-1 w-full bg-zinc-200'
-                  />
+                <div className="w-full mt-4 max-w-xs mx-auto">
+                  <Progress value={uploadProgress} className="h-1 w-full bg-zinc-200" />
                   {uploadProgress === 100 ? (
-                    <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
-                      <Loader2 className='h-3 w-3 animate-spin' />
+                    <div className="flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2">
+                      <Loader2 className="h-3 w-3 animate-spin" />
                       Redirecting...
                     </div>
                   ) : null}
                 </div>
               ) : null}
 
-
-              <input {...getInputProps()} 
-               
-                
-              />
+              <input {...getInputProps()} />
             </label>
           </div>
         </div>
@@ -135,7 +125,7 @@ const UploadBtn = () => {
         <Button>Upload PDF</Button>
       </DialogTrigger>
       <DialogContent>
-        <UploadDropzone />
+        <UploadDropzone setIsOpen={setIsOpen} /> {/* ✅ Pass setIsOpen to close dialog */}
       </DialogContent>
     </Dialog>
   );
