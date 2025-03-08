@@ -76,7 +76,7 @@ const ChatWrapper = ({ fileId }) => {
         <Message fileId={fileId} />
       </div>
 
-      <ChatInput fileId={fileId}/>
+      <ChatInput fileId={fileId} />
     </div>
   );
 };
