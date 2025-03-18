@@ -61,7 +61,7 @@ export const ourFileRouter = {
 
         //langchain text splitter
         const splitter = new RecursiveCharacterTextSplitter({
-          chunkSize: 1000,
+          chunkSize: 2000,
           chunkOverlap: 200,
         });
 

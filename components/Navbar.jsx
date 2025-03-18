@@ -3,11 +3,17 @@ import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
 
 import { ArrowRight } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth'
+import { NEXT_AUTH } from '@/lib/auth'
+import MobileNav from './MobileNav'
 // import UserAccountNav from './UserAccountNav'
-// import MobileNav from './MobileNav'
 
-const Navbar = () => {
-const user = true
+
+const Navbar = async () => {
+  const session = await getServerSession(NEXT_AUTH);
+
+
 
   return (
     <nav className='sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -16,13 +22,13 @@ const user = true
           <Link
             href='/'
             className='flex z-40 font-semibold'>
-            <span>quill.</span>
+            <span>ChatPedia.</span>
           </Link>
 
-          {/* <MobileNav isAuth={!!user} /> */}
+          <MobileNav isAuth={!!session} />
 
-          <div className='hidden items-center space-x-4 sm:flex'>
-            {!user ? (
+          <div className='hidden lg:block items-center space-x-4'>
+            {!session ? (
               <>
                 <Link
                   href='/pricing'
@@ -40,14 +46,15 @@ const user = true
                     size: 'sm',
                   })}>
                   Sign in
-                </LoginLink>
-                <RegisterLink
+                </LoginLink> */}
+                <Link
+                href='/signin'
                   className={buttonVariants({
                     size: 'sm',
                   })}>
                   Get started{' '}
                   <ArrowRight className='ml-1.5 h-5 w-5' />
-                </RegisterLink> */}
+                </Link>
               </>
             ) : (
               <>

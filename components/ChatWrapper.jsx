@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Message from "./Message";
 import ChatInput from "./ChatInput";
 import { getFileUploadStatus } from "@/actions/dbActions";
 import { Loader2 } from "lucide-react";
+import Messages from "./Messages";
 
 const ChatWrapper = ({ fileId }) => {
   console.log(fileId);
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [messages, setMessages] = useState([]); 
   useEffect(() => {
     const fetchFileStatus = async () => {
       setIsLoading(true); // Start loading
@@ -71,13 +72,18 @@ const ChatWrapper = ({ fileId }) => {
   }
 
   return (
-    <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
-      <div className="flex-1 justify-between flex flex-col mb-28">
-        <Message fileId={fileId} />
-      </div>
+    <div className="relative min-h-full bg-zinc-50 flex flex-col">
+    {/* Scrollable messages container */}
+    <div className="flex-1 flex flex-col overflow-y-auto mb-[100px]">
+  <Messages fileId={fileId} messages={messages} />
+</div>
 
-      <ChatInput fileId={fileId} />
+
+    {/* Chat Input - Fixed at Bottom */}
+    <div className="sticky bottom-0 bg-zinc-50 border-t border-gray-200 p-2">
+      <ChatInput fileId={fileId} setMessages={setMessages} />
     </div>
+  </div>
   );
 };
 

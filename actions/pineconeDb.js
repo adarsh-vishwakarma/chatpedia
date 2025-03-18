@@ -60,7 +60,7 @@ export async function getQuestionAnswer(fileId, message) {
     ],
   };
   const queryResponse = await index.namespace(fileId).query({
-    topK: 3, // Number of closest matches to retrieve
+    topK: 5, // Number of closest matches to retrieve
     vector: formattedQueryEmbeddings.data[0].values, // Use the query embedding
     includeValues: false, // Don't include the actual values in the response
     includeMetadata: true, // Include metadata (the original text of each match)

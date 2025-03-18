@@ -1,7 +1,4 @@
-"use client";
-
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ Import useRouter for redirection
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import Dropzone from "react-dropzone";
@@ -9,12 +6,7 @@ import { Cloud, File, Loader2 } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { useUploadThing } from "@/lib/uploadthing";
 
-const UploadDropzone = ({ setIsOpen }) => { // ✅ Receive setIsOpen as a prop
-  const [fileName, setFileName] = useState(null);
-  const [isUploading, setIsUploading] = useState(true);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const router = useRouter(); // ✅ Use router for redirection
-
+const UploadDropzone = ({ setIsOpen, isUploading, setIsUploading, uploadProgress, setUploadProgress }) => {
   const { startUpload } = useUploadThing("pdfUpload");
 
   const startSimulatedProgress = () => {
@@ -42,7 +34,7 @@ const UploadDropzone = ({ setIsOpen }) => { // ✅ Receive setIsOpen as a prop
         const progressInterval = startSimulatedProgress();
         const res = await startUpload(acceptedFiles);
         const [fileResponse] = res;
-        console.log(fileResponse)
+        console.log(fileResponse);
         clearInterval(progressInterval);
         setUploadProgress(100);
 
@@ -53,7 +45,6 @@ const UploadDropzone = ({ setIsOpen }) => { // ✅ Receive setIsOpen as a prop
         if (fileResponse) {
           setTimeout(() => {
             setIsOpen(false); // ✅ Close the dialog after upload
-            // router.push(`/dashboard/${fileResponse.key}`); // ✅ Redirect to uploaded file page
           }, 1500);
         }
       }}
@@ -111,21 +102,29 @@ const UploadDropzone = ({ setIsOpen }) => { // ✅ Receive setIsOpen as a prop
 
 const UploadBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const handleDialogOpenChange = (open) => {
+    // Prevent dialog from closing while uploading
+    if (!isUploading) {
+      setIsOpen(open);
+    }
+  };
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(v) => {
-        if (!v) {
-          setIsOpen(v);
-        }
-      }}
-    >
+    <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        <Button>Upload PDF</Button>
+        <Button className="bg-gray-800">Upload PDF</Button>
       </DialogTrigger>
-      <DialogContent>
-        <UploadDropzone setIsOpen={setIsOpen} /> {/* ✅ Pass setIsOpen to close dialog */}
+      <DialogContent onPointerDown={(e) => e.stopPropagation()}>
+        <UploadDropzone
+          setIsOpen={setIsOpen}
+          isUploading={isUploading}
+          setIsUploading={setIsUploading}
+          uploadProgress={uploadProgress}
+          setUploadProgress={setUploadProgress}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
 import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -20,7 +21,7 @@ import {
 import SimpleBar from "simplebar-react";
 import PdfFullscreen from "./PdfFullScreen";
 
-// Set the workerSrc to a stable version (e.g., 2.10.377)
+// Set PDF.js worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 const PdfRender = ({ url }) => {
@@ -28,8 +29,7 @@ const PdfRender = ({ url }) => {
   const [currPage, setCurrPage] = useState(1);
   const [scale, setScale] = useState(1);
   const [rotation, setRotation] = useState(0);
-  const [renderedScale, setRenderedScale] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   const { width, ref } = useResizeDetector();
 
@@ -48,9 +48,9 @@ const PdfRender = ({ url }) => {
     setValue,
   } = useForm({
     defaultValues: {
-      page: "1", // Default page value as a string
+      page: "1",
     },
-    resolver: zodResolver(CustomPageValidator), // Use Zod resolver for validation
+    resolver: zodResolver(CustomPageValidator),
   });
 
   const handlePageSubmit = ({ page }) => {
@@ -59,8 +59,10 @@ const PdfRender = ({ url }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
+    <div className="w-full h-screen bg-white rounded-md shadow flex flex-col">
+      {/* Top Controls */}
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2">
+        {/* Page Navigation */}
         <div className="flex items-center gap-1.5">
           <Button
             disabled={currPage <= 1}
@@ -108,7 +110,8 @@ const PdfRender = ({ url }) => {
           </Button>
         </div>
 
-        <div className="space-x-2">
+        {/* Zoom & Rotate Options */}
+        <div className="space-x-2 flex items-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="gap-1.5" aria-label="zoom" variant="ghost">
@@ -127,47 +130,52 @@ const PdfRender = ({ url }) => {
 
           <Button
             onClick={() => setRotation((prev) => prev + 90)}
-            variant='ghost'
-            aria-label='rotate 90 degrees'>
-            <RotateCw className='h-4 w-4' />
+            variant="ghost"
+            aria-label="rotate 90 degrees"
+          >
+            <RotateCw className="h-4 w-4" />
           </Button>
+
           <PdfFullscreen fileUrl={url} />
         </div>
       </div>
 
-      <div className='flex-1 w-full max-h-screen'>
-     <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]">
-        <div ref={ref}>
-          <Document
-            file={url}
-            onLoadError={() => {
-              toast("An error occurred while loading the PDF. Please try again later.");
-            }}
-            onLoadSuccess={({ numPages }) => {
-              setNumPages(numPages);
-              setIsLoading(false);
-            }}
-            className="max-h-full"
-          >
-            {isLoading && (
-              <div className="flex justify-center my-24">
-                <Loader2 className="h-6 w-6 animate-spin" />
-              </div>
-            )}
-            <Page
-              pageNumber={currPage}
-              scale={scale}
-              key={`${currPage}-${scale}`}  
-              loading={
+      {/* PDF Viewer - Full Height */}
+      <div className="flex-1 w-full h-full overflow-hidden">
+        <SimpleBar autoHide={false} className="h-full">
+          <div ref={ref} className="h-full flex items-center justify-center">
+            <Document
+              file={url}
+              onLoadError={() => {
+                toast("An error occurred while loading the PDF. Please try again later.");
+              }}
+              onLoadSuccess={({ numPages }) => {
+                setNumPages(numPages);
+                setIsLoading(false);
+              }}
+              className="h-full"
+            >
+              {isLoading && (
                 <div className="flex justify-center my-24">
                   <Loader2 className="h-6 w-6 animate-spin" />
                 </div>
-              }
-            />
-          </Document>
-        </div>
-      </SimpleBar>
-     </div>
+              )}
+              <Page
+                pageNumber={currPage}
+                width={width || 1}
+                scale={scale}
+                rotate={rotation}
+                key={`${currPage}-${scale}-${rotation}`}  
+                loading={
+                  <div className="flex justify-center my-24">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  </div>
+                }
+              />
+            </Document>
+          </div>
+        </SimpleBar>
+      </div>
     </div>
   );
 };
