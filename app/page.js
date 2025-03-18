@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import Image from 'next/image';
-import { Meteors } from '@/components/magicui/Meteors';
+import { Meteors } from '../components/magicui/meteors';
 
 export default function Home() {
   return (
