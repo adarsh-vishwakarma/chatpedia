@@ -42,7 +42,7 @@ const Sidebar = ({ open }) => {
               <div
                 className={`w-full flex justify-start items-center mb-2 py-3 px-4 rounded-md ${
                   pathname === item.href
-                    ? "bg-gray-800 text-white"
+                    ? "bg-orange-500 text-white"
                     : "text-gray-800 hover:bg-gray-100"
                 }`}
               >
@@ -52,7 +52,7 @@ const Sidebar = ({ open }) => {
             </Link>
           ))}
           <div className="my-3 h-px w-full bg-gray-300" />
-          <Link href="/">
+          <Link href="/youtube">
               <div
                 className={`w-full flex justify-start items-center mb-2 py-3 px-4 rounded-md ${
                   pathname === "/youtube"

@@ -49,7 +49,7 @@ const PricingSection = () => {
   return (
     <div className="text-center">
       <h1 className="capitalize text-5xl">Pricing</h1>
-      <h2 className="font-extrabold text-4xl mb-10 pt-5">
+      <h2 className="font-extrabold text-4xl mb-10 pt-5 text-gray-900">
         Flexible Pricing to Fit Your Needs
       </h2>
       <div className="mt-10 grid items-center grid-cols-1 gap-3 md:grid-cols-3 max-w-screen-xl mx-auto">

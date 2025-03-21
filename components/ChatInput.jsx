@@ -60,7 +60,7 @@ if (results) {
               />
 
               <Button
-                className="absolute bottom-1.5 right-[8px]"
+                className="absolute bottom-3.5 right-[8px] bg-orange-500 hover:bg-orange-700 hover:cursor-pointer"
                 onClick={handleMessageSend}
               >
                 <Send className="h-4 w-4" />

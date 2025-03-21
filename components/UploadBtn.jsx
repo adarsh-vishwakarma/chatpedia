@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import Dropzone from "react-dropzone";
-import { Cloud, File, Loader2 } from "lucide-react";
+import { Cloud, File, Loader2, Plus } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { useUploadThing } from "@/lib/uploadthing";
 
@@ -115,7 +115,7 @@ const UploadBtn = () => {
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        <Button className="bg-gray-800">Upload PDF</Button>
+        <Button className="bg-orange-500 hover:bg-orange-700 hover:cursor-pointer"> <Plus className="h-8 w-8" /></Button>
       </DialogTrigger>
       <DialogContent onPointerDown={(e) => e.stopPropagation()}>
         <UploadDropzone

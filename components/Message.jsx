@@ -35,7 +35,7 @@ const Message = forwardRef(({ message, previousMessage }, ref) => {
       {/* User Message (Appears BELOW the AI message) */}
       {isUserMessage && (
         <div className="flex justify-end">
-          <div className="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-md shadow-md">
+          <div className="bg-orange-500 text-white px-4 py-2 rounded-lg max-w-md shadow-md">
             <ReactMarkdown className="prose text-zinc-50">{message.text}</ReactMarkdown>
             <div className="text-xs text-blue-300 mt-1 text-right">
               {format(new Date(), "HH:mm")}
